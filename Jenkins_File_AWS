@@ -14,8 +14,7 @@ parameters {
     stages {
         stage('Checkout Code') {
             steps {
-                git 'https://github.com/sashinfi/terraform_aws.git'
-				
+                git branch: 'main', url: 'https://github.com/sashinfi/terraform_aws.git'		
             }
         }
 
