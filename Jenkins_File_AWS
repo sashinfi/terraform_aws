@@ -38,7 +38,7 @@ parameters {
         stage('Terraform Apply/Destroy') {
             steps {
                 script {
-				    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'aws-credentials-for-terraform', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+				    withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'tf_sathish_terraform, secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
 					bat 'echo Access key: %AWS_ACCESS_KEY_ID%'  // should NOT print blank
 					bat 'echo Access key: %AWS_SECRET_ACCESS_KEY%'
                         if (params.RUN_STAGE == 'apply') {
