@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    environment {
+        
+    }
+    
+parameters {
+        choice(name: 'RUN_STAGE', choices: ['apply', 'destroy'], description: 'Select the apply or destroy actions')
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git 'https://github.com/sashinfi/terraform_aws.git'
+				
+            }
+        }
+
+        stage('Terraform Init') {
+            when {
+                expression { params.RUN_STAGE == 'apply'}
+            }
+            steps {
+                bat 'terraform init'
+            }
+        }
+
+        stage('Terraform Plan') {
+             when {
+                expression { params.RUN_STAGE == 'apply' }
+            }
+            steps {
+                bat 'terraform plan -out=tfplan'
+            }
+        }
+        stage('Terraform Apply/Destroy') {
+            steps {
+                script {
+                    withCredentials([aws(credentialsId: 'aws-credentials-for-terraform, accessKeyVariable: 'AWS_ACCESS_KEY_ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                       bat 'echo Access key: %AWS_ACCESS_KEY_ID%'  // should NOT print blank
+                        if (params.RUN_STAGE == 'apply') {
+                            bat 'terraform apply -auto-approve tfplan'
+                        } else if (params.RUN_STAGE == 'destroy') {
+                            bat 'terraform destroy -auto-approve'
+                        } else {
+                            error("❌ Invalid RUN_STAGE parameter. Must be apply or destroy.")
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
