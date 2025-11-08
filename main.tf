@@ -9,14 +9,11 @@ terraform {
 }
 
 provider "aws" {
-  # Configuration options
   region = "${var.aws_region}"
 }
 
 
 module "ec2_instance" {
-  #aws_ec2_source
-  #"terraform-aws-modules/ec2-instance/aws"
   source  ="terraform-aws-modules/ec2-instance/aws"
   name = "sathish-ec2-instance"
   ami = "${var.aws_ec2_ami}"
