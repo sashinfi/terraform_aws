@@ -1,6 +1,12 @@
 pipeline {
     agent any
-
+	
+    tools {
+        jdk 'JDK21'
+        maven 'MAVEN_3911'
+        terraform 'terraform_local' // Use the name you defined in Global Tool Configuration
+							  
+    }
     
 parameters {
         choice(name: 'RUN_STAGE', choices: ['apply', 'destroy'], description: 'Select the apply or destroy actions')
